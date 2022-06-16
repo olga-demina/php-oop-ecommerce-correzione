@@ -5,8 +5,8 @@ class Cosmetics extends Product {
     public $flavour;
     public $antifleas;
 
-    function __construct($_name, $_brand, $_description, $_price, $_antifleas = true) {
-        parent::__construct($_name, $_brand, $_description, $_price);
+    function __construct($_name, $_brand, $_description, $_price, $_available = true, $_antifleas = true) {
+        parent::__construct($_name, $_brand, $_description, $_price, $_available);
         $this->antifleas = $_antifleas;
     }
 }

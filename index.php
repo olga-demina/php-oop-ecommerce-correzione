@@ -10,9 +10,18 @@
 require_once __DIR__ . "/Food.php";
 require_once __DIR__ . "/Toy.php";
 require_once __DIR__ . "/Cosmetics.php";
-require_once __DIR__ . "/User.php";
+require_once __DIR__ . "/Customer.php";
 require_once __DIR__ . "/CreditCard.php";
+require_once __DIR__ . "/Supplier.php";
 
+// Aggiunta di supplier
+$tuttoPerGatti = new Supplier();
+$tuttoPerGatti->register("Tutto per gatti", "tuttopergatti@gmail.com");
+
+var_dump($tuttoPerGatti->isRegistered());
+var_dump($tuttoPerGatti);
+
+// Creazione di prodotti
 $cat_food = new Food("Royal Canin extra pack", "Royal Canin", "Cibo per i gatti", 9, 500, "chicken");
 // var_dump($cat_food);
 echo $cat_food->printProductInfo();
@@ -23,21 +32,41 @@ $mouse->material = "peluche";
 // var_dump($mouse);
 echo $mouse->printProductInfo();
 
-$cat_shampoo = new Cosmetics("Cat Shampoo", "My cat", "Shampoo per i gatti", 3.50);
+$cat_shampoo = new Cosmetics("Cat Shampoo", "My cat", "Shampoo per i gatti", 3.50, false);
 // var_dump($cat_shampoo);
 echo $cat_shampoo->printProductInfo();
 
-$olga = new User();
-$olga->addProductToCart($cat_food);
-$olga->addProductToCart($cat_shampoo);
+// Customer sta facendo la spesa
+$olga = new Customer();
 
+try {
+    $olga->addProductToCart($cat_food);
+} catch (Exception $e) {
+    echo "<br>" . $e->getMessage() . "<br>";
+}
+
+try {
+    $olga->addProductToCart($cat_shampoo);
+} catch (Exception $e) {
+    echo  "<br>" .  $e->getMessage() . "<br>";
+}
+
+// Provo a lanciare l'eccezzione
+try {
+    $olga->addProductToCart($tuttoPerGatti);
+} catch (Exception $e) {
+  echo $e->getMessage();  
+}
+
+var_dump($olga);
+
+// Registrazione e pagamento
 $olga->register("olga", "olga@gmail.com");
 
 $olga->setPaymentMethod(new CreditCard(2340294209482, "02/25", 345));
 
-var_dump($olga);
-
 echo $olga->pay();
+
 
 ?>
 

@@ -1,24 +1,28 @@
 <?php
 
-class User {
-    public $name;
-    public $email;
+require_once __DIR__ . "/Authentication.php";
+
+class Customer {
+    use Authentication;
+
     public $cart = [];
     public $paymentMethod;
 
     /**
-     * Aggiunge un oggetto di tipo prodotto al carrello
+     * Aggiunge un oggetto di tipo prodotto al carrello. Può lanciare un eccezzione se l'argomento non è del tipo Product
      * @param mixed $product
      * 
-     * @return [boolean] True se aggiunge al carrello, false altrimenti
+     * @return void
      */
     public function addProductToCart($product) {
         // Controllare se è prodotto
-        if (get_parent_class($product) === "Product") {
-            $this->cart[] = $product;
-            return true;
+        if (get_parent_class($product) !== "Product") {
+            throw new Exception("Stai aggiungendo nel carrello qualcosa che non è un prodotto");
         }
-        return false;
+        if (!$product->available) {
+            throw new Exception("Prodotto non è disponibile");
+        }
+        $this->cart[] = $product;
     }
 
     /**
@@ -36,28 +40,7 @@ class User {
         return $total_price;
     }
 
-    /** Controlla se l'utente è registrato
-     * @return [boolean] Ritorna true se l'utente è registrato, false altrimenti
-     */
-    public function isRegistered() {
-        if ($this->email && $this->name) {
-            return true;
-        }
-        return false;
-    }
-
- 
-    /**
-     * @param string $_name
-     * @param string $_email
-     * 
-     * @return void
-     */
-    public function register($_name, $_email) {
-        $this->name = $_name;
-        $this->email = $_email;
-    }
-
+  
     /**
      * @param mixed $_paymentMethod
      * 
